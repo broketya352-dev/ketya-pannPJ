@@ -1,18 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef struct
-{
-    int flowerID;
-    char nameFlower[50];
-    float price;
-    int inStock;
-    int lowstock;
-} Flower;
+#include "data.h"
 
-void updateFlower(Flower flowers[], int count);
+void updateFlower(Flower *flowers, int count);
 
-void updateFlower(Flower flowers[], int count)
+void updateFlower(Flower *flowers, int count)
 {
     int id;
     int flag = -1;
@@ -22,11 +15,12 @@ void updateFlower(Flower flowers[], int count)
 
     for (int i = 0; i < count; i++)
     {
-        printf("ID: %d | Name: %s | Price: %.2f | Stock: %d\n",
+        printf("ID: %d | Name: %s | Price: %.2f | Stock: %d | Low Stock: %d\n",
                flowers[i].flowerID,
                flowers[i].nameFlower,
                flowers[i].price,
-               flowers[i].inStock);
+               flowers[i].inStock,
+               flowers[i].lowstock);
     }
 
     printf("\nEnter Flower ID to update: ");
@@ -72,9 +66,7 @@ void updateFlower(Flower flowers[], int count)
                   sizeof(flowers[flag].nameFlower),
                   stdin);
 
-            flowers[flag].nameFlower[
-                strcspn(flowers[flag].nameFlower, "\n")
-            ] = '\0';
+            flowers[flag].nameFlower[strcspn(flowers[flag].nameFlower, "\n")] = '\0';
 
             printf("New name has saved\n");
             break;
@@ -136,18 +128,31 @@ void updateFlower(Flower flowers[], int count)
                   sizeof(flowers[flag].nameFlower),
                   stdin);
 
-            flowers[flag].nameFlower[
-                strcspn(flowers[flag].nameFlower, "\n")
-            ] = '\0';
+            flowers[flag].nameFlower[strcspn(flowers[flag].nameFlower, "\n")] = '\0';
 
             printf("New Price: ");
             scanf("%f", &flowers[flag].price);
 
+            if (flowers[flag].price < 0)
+            {
+                flowers[flag].price = 0;
+            }
+
             printf("New Stock: ");
             scanf("%d", &flowers[flag].inStock);
 
+            if (flowers[flag].inStock < 0)
+            {
+                flowers[flag].inStock = 0;
+            }
+
             printf("New Low Stock: ");
             scanf("%d", &flowers[flag].lowstock);
+
+            if (flowers[flag].lowstock < 0)
+            {
+                flowers[flag].lowstock = 0;
+            }
 
             printf("All information updated.\n");
 
@@ -170,20 +175,24 @@ void updateFlower(Flower flowers[], int count)
 
     } while (pick != 0);
 
-    printf("\n===== UPDATED FLOWER =====\n");
+    printf("\n-------------- UPDATED FLOWER -----------------\n");
+
     printf("ID: %d\n", flowers[flag].flowerID);
+
     printf("Name: %s\n", flowers[flag].nameFlower);
+
     printf("Price: %.2f\n", flowers[flag].price);
+
     printf("Stock: %d\n", flowers[flag].inStock);
+
     printf("Minimum Stock: %d\n", flowers[flag].lowstock);
 
     if (flowers[flag].inStock < flowers[flag].lowstock)
     {
-        printf(" NEED RESTOCK\n");
+        printf("STATUS : NEED RESTOCK\n");
     }
     else
     {
-        printf("STOCK SUFFICIENT\n");
+        printf("STATUS : STOCK SUFFICIENT\n");
     }
 }
-
